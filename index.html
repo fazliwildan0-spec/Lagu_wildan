@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7,315 +8,321 @@
 <title>WILDAN PREMIUM</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090d0b;color:white;font-family:Arial,sans-serif}
-header{padding:24px;background:linear-gradient(120deg,#123c2b,#07110c)}
-header h1{margin:0;color:#40e68b;font-size:27px}
-header p{color:#c5d8cd}
-nav{display:flex;gap:10px;padding:12px;overflow:auto;background:#101813;position:sticky;top:0;z-index:5}
-button{border:0;border-radius:22px;padding:10px 15px;background:#20352a;color:white;cursor:pointer}
-button.active,.green{background:#1ed760;color:#06140b;font-weight:bold}
-main{padding:16px;padding-bottom:130px}
-input{width:100%;padding:14px;border-radius:25px;border:1px solid #34513f;background:#17231b;color:white;margin-bottom:16px}
+body{
+ margin:0;background:#090909;color:white;
+ font-family:Arial,sans-serif;padding-bottom:90px
+}
+header{
+ padding:20px;background:#111;
+ display:flex;justify-content:space-between;align-items:center;
+ position:sticky;top:0;z-index:5
+}
+.logo{font-size:21px;font-weight:bold;color:#ff7b19}
+.logo span{color:white}
+button{cursor:pointer;border:0}
+.search{padding:15px;background:#111}
+.search input{
+ width:100%;padding:14px;border-radius:25px;
+ border:1px solid #333;background:#242424;color:white;
+ font-size:15px;outline:none
+}
+.section{padding:15px}
 h2{font-size:19px}
-#status{color:#a7c5b2;font-size:13px;margin:12px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:13px}
-.song{background:#142019;padding:10px;border-radius:13px;min-width:0}
-.song img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;background:#25392c}
-.song b{display:block;margin-top:9px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.song small{color:#a8b8ad;display:block;margin:5px 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.song button{padding:8px 11px;margin:2px}
-#player{position:fixed;bottom:0;left:0;right:0;background:#142019;border-top:1px solid #34513f;padding:12px;z-index:10}
-.playerrow{display:flex;align-items:center;gap:12px}
-#cover{width:52px;height:52px;border-radius:8px;object-fit:cover;background:#26372c}
-.info{flex:1;min-width:0}
-#nowTitle{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#nowArtist{font-size:12px;color:#a8b8ad;margin-top:4px}
-audio{width:100%;height:35px;margin-top:7px}
-#player button{padding:8px 12px}
-.loading{opacity:.6}
+.categories{display:flex;gap:9px;overflow:auto}
+.categories button{
+ background:#252525;color:white;padding:10px 16px;
+ border-radius:20px;white-space:nowrap
+}
+.categories button.active{background:#ff7918;color:black}
+.grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px
+}
+.song{
+ background:#171717;border-radius:13px;overflow:hidden;
+ cursor:pointer;min-width:0
+}
+.song img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.song-info{padding:10px}
+.song-title{font-size:14px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-artist{font-size:12px;color:#aaa;margin-top:6px}
+#player{
+ background:#171717;margin:15px;padding:15px;
+ border-radius:18px;text-align:center
+}
+#cover{
+ width:210px;height:210px;object-fit:cover;
+ border-radius:15px;margin:5px auto 15px;
+ box-shadow:0 8px 30px #000
+}
+#nowTitle{font-size:20px;font-weight:bold}
+#nowArtist{color:#aaa;margin-top:6px}
+#youtube{width:100%;height:210px;border:0;border-radius:12px;margin-top:15px}
+.controls{display:flex;justify-content:center;gap:20px;margin:15px}
+.controls button{
+ background:#ff7918;color:#111;border-radius:50%;
+ width:48px;height:48px;font-size:20px
+}
+.tabs{display:flex;gap:10px;margin-top:20px}
+.tabs button{
+ flex:1;padding:12px;border-radius:10px;
+ background:#292929;color:white
+}
+.tabs button.active{background:#ff7918;color:black}
+#lyrics{
+ background:#101010;padding:18px;border-radius:12px;
+ white-space:pre-wrap;line-height:2;color:#ddd;
+ min-height:120px;margin-top:12px
+}
+#lyricsInput{
+ width:100%;margin-top:12px;padding:12px;
+ background:#242424;color:white;border:1px solid #444;
+ border-radius:10px;min-height:90px
+}
+.action{
+ background:#ff7918;color:#111;padding:12px 16px;
+ border-radius:10px;font-weight:bold;margin-top:10px
+}
+nav{
+ position:fixed;bottom:0;left:0;right:0;
+ background:#111;border-top:1px solid #292929;
+ display:flex;justify-content:space-around;padding:14px 5px;
+ z-index:10
+}
+nav button{background:none;color:#bbb;font-size:12px}
+nav button.active{color:#ff7918}
+.small{font-size:12px;color:#999}
 </style>
 </head>
 <body>
 
 <header>
-<h1>WILDAN PREMIUM 🎧</h1>
-<p>Dengarkan musik favoritmu kapan saja.</p>
+ <div class="logo">WILDAN <span>PREMIUM</span></div>
+ <div>♫</div>
 </header>
 
+<div class="search">
+ <input id="search" placeholder="Cari lagu atau penyanyi..."
+ onkeydown="if(event.key==='Enter') searchSongs()">
+ <button class="action" onclick="searchSongs()">CARI LAGU</button>
+</div>
+
+<div class="section">
+ <h2>Jelajahi Musik</h2>
+ <div class="categories">
+  <button class="active" onclick="quickSearch('lagu viral Indonesia 2026',this)">Viral Indo</button>
+  <button onclick="quickSearch('viral international songs 2026',this)">Viral Barat</button>
+  <button onclick="quickSearch('pop Indonesia',this)">Pop Indo</button>
+  <button onclick="quickSearch('popular western pop songs',this)">Pop Barat</button>
+  <button onclick="quickSearch('Kpop popular songs',this)">K-Pop</button>
+ </div>
+</div>
+
+<div class="section">
+ <h2>Hasil Lagu</h2>
+ <div class="small" id="status">Cari lagu favoritmu.</div>
+ <div class="grid" id="songList"></div>
+</div>
+
+<div class="section">
+ <h2>Sedang Diputar</h2>
+ <div id="player">
+  <img id="cover" src="https://placehold.co/400x400/222/fff?text=WILDAN+PREMIUM">
+  <div id="nowTitle">Pilih lagu terlebih dahulu</div>
+  <div id="nowArtist">WILDAN PREMIUM</div>
+  <div class="controls">
+   <button onclick="previousSong()">⏮</button>
+   <button onclick="togglePlayer()">▶</button>
+   <button onclick="nextSong()">⏭</button>
+  </div>
+  <div class="small">Pemutar resmi YouTube</div>
+  <div id="youtube"></div>
+
+  <div class="tabs">
+   <button class="active" id="lyricsTab" onclick="showTab('lyrics')">LIRIK</button>
+   <button id="queueTab" onclick="showTab('queue')">ANTREAN</button>
+  </div>
+  <div id="lyrics">
+   Lirik lagu akan ditampilkan di sini.
+  </div>
+  <div id="queue" style="display:none;text-align:left"></div>
+
+  <textarea id="lyricsInput" placeholder="Masukkan lirik lagu di sini..."></textarea>
+  <button class="action" onclick="saveLyrics()">SIMPAN LIRIK</button>
+ </div>
+</div>
+
 <nav>
-<button class="active" onclick="showTab('all',this)">Semua Lagu</button>
-<button onclick="showTab('fav',this)">♥ Favorit</button>
-<button onclick="loadMusic()">Muat Ulang</button>
+ <button class="active" onclick="scrollToTop()">⌂<br>Beranda</button>
+ <button onclick="document.getElementById('search').focus()">⌕<br>Cari</button>
+ <button onclick="document.getElementById('player').scrollIntoView()">♫<br>Musik</button>
+ <button onclick="showTab('queue');document.getElementById('player').scrollIntoView()">☷<br>Antrean</button>
 </nav>
 
-<main>
-<input id="search" placeholder="Cari judul atau penyanyi..." oninput="render()">
-<h2>Perpustakaan Musik</h2>
-<div id="status">Sedang mengambil katalog musik...</div>
-<div id="songs" class="grid"></div>
-</main>
-
-<div id="player">
-<div class="playerrow">
-<img id="cover" src="https://placehold.co/100x100/20352a/ffffff?text=WP">
-<div class="info">
-<div id="nowTitle">Belum ada lagu diputar</div>
-<div id="nowArtist">Pilih lagu untuk mulai mendengarkan</div>
-</div>
-<button onclick="audioElement.pause()">Ⅱ</button>
-</div>
-<audio id="audio" controls preload="none"></audio>
-</div>
-
 <script>
-const API="https://archive.org/advancedsearch.php";
-const PLACEHOLDER="https://placehold.co/600x600/20352a/ffffff?text=WILDAN";
-
-const songsBox=document.getElementById("songs");
-const statusBox=document.getElementById("status");
-const audioElement=document.getElementById("audio");
+const API_KEY = "MASUKKAN_API_KEY_KAMU";
 
 let songs=[];
-let currentTab="all";
-let favorites=JSON.parse(localStorage.getItem("wp_favorites")||"[]");
-let coverCache={};
+let currentIndex=-1;
+let currentTab="lyrics";
 
-try{
- coverCache=JSON.parse(localStorage.getItem("wp_covers")||"{}");
-}catch(e){coverCache={};}
-
-// MENCARI COVER ALBUM ASLI
-async function getRealCover(song){
- if(coverCache[song.id]) return coverCache[song.id];
-
- try{
-  const query=encodeURIComponent(song.title+" "+song.artist);
-  const response=await fetch(
-   "https://itunes.apple.com/search?term="+query+
-   "&entity=song&limit=10"
-  );
-
-  if(!response.ok) throw new Error("Cover tidak tersedia");
-
-  const data=await response.json();
-  const results=data.results||[];
-
-  const clean=s=>s.toLowerCase()
-   .replace(/[^a-z0-9 ]/g,"")
-   .trim();
-
-  const targetTitle=clean(song.title);
-  const targetArtist=clean(song.artist);
-
-  let match=results.find(item=>
-   clean(item.trackName||"")===targetTitle &&
-   targetArtist.includes(clean(item.artistName||""))
-  );
-
-  if(!match){
-   match=results.find(item=>
-    clean(item.trackName||"").includes(targetTitle) ||
-    targetTitle.includes(clean(item.trackName||""))
-   );
-  }
-
-  if(!match && results.length) match=results[0];
-
-  if(match && match.artworkUrl100){
-   const artwork=match.artworkUrl100.replace(
-    "100x100bb","600x600bb"
-   );
-   coverCache[song.id]=artwork;
-
-   try{
-    localStorage.setItem("wp_covers",JSON.stringify(coverCache));
-   }catch(e){}
-
-   return artwork;
-  }
- }catch(error){
-  console.log("Gagal mencari cover:",song.title,error);
- }
-
- return PLACEHOLDER;
+async function searchSongs(){
+ const query=document.getElementById("search").value.trim();
+ if(!query)return;
+ await getSongs(query);
 }
 
-// MEMUAT KATALOG MUSIK
-async function loadMusic(){
- statusBox.textContent="Mengambil katalog musik gratis...";
- songsBox.innerHTML="";
-
- try{
-  const query="mediatype:audio AND collection:opensource_audio";
-  const url=API+"?q="+encodeURIComponent(query)+
-   "&fl[]=identifier&fl[]=title&fl[]=creator"+
-   "&rows=1000&page=1&output=json&sort[]=downloads+desc";
-
-  const response=await fetch(url);
-  if(!response.ok) throw new Error("Katalog gagal");
-
-  const data=await response.json();
-
-  songs=(data.response.docs||[]).map(item=>({
-   id:item.identifier,
-   title:item.title||item.identifier,
-   artist:Array.isArray(item.creator)
-    ?item.creator.join(", ")
-    :(item.creator||"Artis tidak diketahui"),
-   image:coverCache[item.identifier]||PLACEHOLDER
-  }));
-
-  render();
-
-  statusBox.textContent=
-   "Ditemukan "+songs.length+
-   " item katalog. Sedang mencari cover album...";
-
-  // Cari cover satu per satu agar tidak membebani layanan
-  for(let i=0;i<songs.length;i++){
-   const song=songs[i];
-   if(!coverCache[song.id]){
-    song.image=await getRealCover(song);
-   }else{
-    song.image=coverCache[song.id];
-   }
-
-   // Perbarui tampilan bertahap
-   if(i<80) render();
-
-   if(i%20===0){
-    statusBox.textContent=
-     "Memproses cover album "+(i+1)+" dari "+songs.length;
-   }
-  }
-
-  render();
-  statusBox.textContent=
-   "Katalog siap: "+songs.length+" lagu. Cover dicari otomatis jika tersedia.";
-
- }catch(error){
-  statusBox.textContent=
-   "Katalog gagal dimuat. Periksa koneksi internet lalu muat ulang.";
-  console.error(error);
- }
-}
-
-// TAB
-function showTab(tab,button){
- currentTab=tab;
- document.querySelectorAll("nav button")
-  .forEach(b=>b.classList.remove("active"));
+async function quickSearch(query,button){
+ document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
  button.classList.add("active");
- render();
+ await getSongs(query);
 }
 
-// TAMPILKAN LAGU
-function render(){
- const term=document.getElementById("search").value.toLowerCase();
-
- let list=songs.filter(song=>
-  (song.title+" "+song.artist).toLowerCase().includes(term)
- );
-
- if(currentTab==="fav"){
-  list=list.filter(song=>favorites.includes(song.id));
- }
-
- songsBox.innerHTML="";
-
- if(!list.length){
-  songsBox.innerHTML="<p>Belum ada lagu yang cocok.</p>";
+async function getSongs(query,pageToken=""){
+ if(API_KEY==="MASUKKAN_API_KEY_KAMU"){
+  document.getElementById("status").innerText="Masukkan YouTube API Key terlebih dahulu.";
   return;
  }
 
+ document.getElementById("status").innerText="Sedang mencari lagu...";
+ try{
+  let url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults=50&regionCode=ID&q=${encodeURIComponent(query)}&key=${API_KEY}`;
+  if(pageToken)url+="&pageToken="+pageToken;
+
+  const response=await fetch(url);
+  const data=await response.json();
+  if(data.error)throw new Error(data.error.message);
+
+  const found=(data.items||[]).filter(item=>item.id.videoId).map(item=>({
+   id:item.id.videoId,
+   title:item.snippet.title,
+   artist:item.snippet.channelTitle,
+   image:item.snippet.thumbnails.high?.url ||
+         item.snippet.thumbnails.medium?.url,
+   lyrics:""
+  }));
+
+  found.forEach(song=>{
+   if(!songs.some(s=>s.id===song.id))songs.push(song);
+  });
+
+  renderSongs(found);
+  document.getElementById("status").innerText=
+   found.length+" hasil ditemukan.";
+
+  window.nextPageToken=data.nextPageToken||"";
+ }catch(error){
+  document.getElementById("status").innerText="Gagal mencari: "+error.message;
+ }
+}
+
+function renderSongs(list){
+ const container=document.getElementById("songList");
+ container.innerHTML="";
  list.forEach(song=>{
+  const index=songs.findIndex(s=>s.id===song.id);
   const card=document.createElement("div");
   card.className="song";
-
   const img=document.createElement("img");
-  img.src=song.image||PLACEHOLDER;
-  img.loading="lazy";
+  img.src=song.image;
   img.alt="Cover "+song.title;
-  img.onerror=()=>img.src=PLACEHOLDER;
-
-  const title=document.createElement("b");
+  const info=document.createElement("div");
+  info.className="song-info";
+  const title=document.createElement("div");
+  title.className="song-title";
   title.textContent=song.title;
-
-  const artist=document.createElement("small");
+  const artist=document.createElement("div");
+  artist.className="song-artist";
   artist.textContent=song.artist;
-
-  const play=document.createElement("button");
-  play.textContent="▶ Putar";
-  play.className="green";
-  play.onclick=()=>playSong(song);
-
-  const fav=document.createElement("button");
-  fav.textContent=favorites.includes(song.id)?"♥":"♡";
-  fav.onclick=()=>toggleFavorite(song.id);
-
-  card.append(img,title,artist,play,fav);
-  songsBox.appendChild(card);
+  info.append(title,artist);
+  card.append(img,info);
+  card.onclick=()=>playSong(index);
+  container.appendChild(card);
  });
 }
 
-// FAVORIT
-function toggleFavorite(id){
- if(favorites.includes(id)){
-  favorites=favorites.filter(x=>x!==id);
- }else{
-  favorites.push(id);
- }
+function playSong(index){
+ if(index<0||index>=songs.length)return;
+ currentIndex=index;
+ const song=songs[index];
 
- localStorage.setItem("wp_favorites",JSON.stringify(favorites));
- render();
-}
-
-// PUTAR MUSIK
-async function playSong(song){
- statusBox.textContent="Mencari file audio...";
-
+ document.getElementById("cover").src=song.image;
  document.getElementById("nowTitle").textContent=song.title;
  document.getElementById("nowArtist").textContent=song.artist;
- document.getElementById("cover").src=song.image||PLACEHOLDER;
+ document.getElementById("youtube").innerHTML=
+ `<iframe title="Pemutar YouTube"
+ src="https://www.youtube.com/embed/${song.id}?autoplay=1&rel=0"
+ allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+ allowfullscreen style="width:100%;height:210px;border:0;border-radius:12px"></iframe>`;
 
- try{
-  const response=await fetch(
-   "https://archive.org/metadata/"+encodeURIComponent(song.id)
-  );
+ const saved=localStorage.getItem("lyrics_"+song.id)||"";
+ document.getElementById("lyrics").textContent=
+ saved||"Lirik belum tersedia. Kamu bisa memasukkan lirik sendiri di bawah.";
+ document.getElementById("lyricsInput").value=saved;
+ showTab("lyrics");
+ renderQueue();
+}
 
-  if(!response.ok) throw new Error("Metadata tidak tersedia");
-
-  const data=await response.json();
-  const files=Object.values(data.files||{});
-
-  const mp3=files.find(file=>
-   file.name &&
-   file.name.toLowerCase().endsWith(".mp3") &&
-   !file.name.toLowerCase().includes("sample")
-  );
-
-  if(!mp3) throw new Error("MP3 tidak ditemukan");
-
-  const path=mp3.name.split("/")
-   .map(part=>encodeURIComponent(part)).join("/");
-
-  audioElement.src=
-   "https://archive.org/download/"+
-   encodeURIComponent(song.id)+"/"+path;
-
-  await audioElement.play();
-
-  statusBox.textContent="Sedang memutar: "+song.title;
-
- }catch(error){
-  statusBox.textContent=
-   "Audio tidak tersedia atau tidak dapat diputar. Coba lagu lain.";
-  console.error(error);
+function nextSong(){
+ if(currentIndex<songs.length-1)playSong(currentIndex+1);
+}
+function previousSong(){
+ if(currentIndex>0)playSong(currentIndex-1);
+}
+function togglePlayer(){
+ if(currentIndex>=0){
+  document.getElementById("youtube").innerHTML=
+  `<iframe title="Pemutar YouTube"
+  src="https://www.youtube.com/embed/${songs[currentIndex].id}?autoplay=1"
+  allow="autoplay; encrypted-media; picture-in-picture"
+  allowfullscreen style="width:100%;height:210px;border:0;border-radius:12px"></iframe>`;
  }
 }
 
-loadMusic();
+function saveLyrics(){
+ if(currentIndex<0)return alert("Pilih lagu dahulu.");
+ const text=document.getElementById("lyricsInput").value;
+ localStorage.setItem("lyrics_"+songs[currentIndex].id,text);
+ document.getElementById("lyrics").textContent=text||"Lirik belum tersedia.";
+ alert("Lirik berhasil disimpan di perangkat ini.");
+}
+
+function showTab(tab){
+ currentTab=tab;
+ document.getElementById("lyrics").style.display=tab==="lyrics"?"block":"none";
+ document.getElementById("queue").style.display=tab==="queue"?"block":"none";
+ document.getElementById("lyricsInput").style.display=tab==="lyrics"?"block":"none";
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+ document.getElementById(tab==="lyrics"?"lyricsTab":"queueTab").classList.add("active");
+ if(tab==="queue")renderQueue();
+}
+
+function renderQueue(){
+ const queue=document.getElementById("queue");
+ queue.innerHTML="";
+ songs.forEach((song,index)=>{
+  const item=document.createElement("div");
+  item.style.cssText="display:flex;gap:10px;align-items:center;padding:10px;border-bottom:1px solid #333;cursor:pointer";
+  const img=document.createElement("img");
+  img.src=song.image;
+  img.style.cssText="width:50px;height:50px;object-fit:cover;border-radius:7px";
+  const text=document.createElement("div");
+  text.innerHTML="";
+  const title=document.createElement("b");
+  title.textContent=song.title;
+  const artist=document.createElement("div");
+  artist.className="small";
+  artist.textContent=song.artist;
+  text.append(title,artist);
+  item.append(img,text);
+  item.onclick=()=>playSong(index);
+  queue.append(item);
+ });
+}
+
+function scrollToTop(){
+ window.scrollTo({top:0,behavior:"smooth"});
+}
 </script>
 </body>
 </html>
-
