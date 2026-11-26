@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOUNDIFY PREMIUM</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090909;color:white;font-family:Arial,sans-serif}
+.app{display:flex;min-height:100vh;padding-bottom:100px}
+.sidebar{width:230px;background:#111;padding:25px;position:fixed;top:0;bottom:95px}
+.logo{font-size:27px;font-weight:bold;color:#1ed760;margin-bottom:35px}
+.nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#aaa;padding:14px 5px;font-size:15px;cursor:pointer}
+.nav button:hover,.nav button.active{color:white}
+.sidebar h4{margin:30px 5px 12px}
+.main{margin-left:230px;width:calc(100% - 230px);padding:28px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}
+.search{background:#242424;border:0;border-radius:30px;padding:14px 20px;color:white;width:min(400px,75%);outline:none}
+.profile{background:#252525;border-radius:30px;padding:12px}
+.hero{padding:35px;border-radius:18px;background:linear-gradient(120deg,#176d3c,#07170e);margin-bottom:30px}
+.hero p{color:#ddd}
+.hero h1{font-size:40px;margin:12px 0}
+h2{margin:25px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:17px}
+.card{background:#191919;padding:13px;border-radius:12px;cursor:pointer;transition:.2s;position:relative}
+.card:hover{background:#292929;transform:translateY(-3px)}
+.cover{width:100%;aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-size:45px;background:linear-gradient(135deg,#245c43,#111)}
+.card h3{font-size:15px;margin-top:12px}
+.card p{color:#aaa;font-size:12px;margin-top:6px}
+.play-card{position:absolute;right:20px;bottom:65px;background:#1ed760;color:black;border:0;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer}
+.row{display:flex;align-items:center;gap:12px;padding:11px;border-bottom:1px solid #292929;cursor:pointer}
+.row:hover{background:#202020}
+.row .cover{width:50px;flex-shrink:0;font-size:23px}
+.info{flex:1;min-width:0}
+.info p{font-size:12px;color:#aaa;margin-top:5px}
+.heart{background:none;border:0;color:#1ed760;font-size:20px;cursor:pointer}
+.player{position:fixed;bottom:0;left:0;right:0;height:95px;background:#181818;border-top:1px solid #333;display:flex;align-items:center;padding:12px 22px;gap:20px;z-index:10}
+.now{width:25%;display:flex;align-items:center;gap:10px;min-width:0}
+.now .cover{width:52px;flex-shrink:0;font-size:23px}
+.now p{font-size:13px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.now small{color:#aaa}
+.controls{flex:1;text-align:center}
+.buttons{display:flex;justify-content:center;align-items:center;gap:23px}
+.buttons button{background:none;color:white;border:0;font-size:20px;cursor:pointer}
+.buttons .play{background:#1ed760;color:black;border-radius:50%;width:36px;height:36px}
+.progress{display:flex;align-items:center;gap:9px;margin-top:8px}
+.progress span{font-size:10px;color:#aaa}
+input[type=range]{accent-color:#1ed760;cursor:pointer}
+#seek{width:100%}
+.volume{width:15%;display:flex;gap:8px;align-items:center}
+.volume input{width:100%}
+#upload{display:none}
+.upload{color:#1ed760;cursor:pointer;margin:15px 5px}
+.empty{color:#aaa;padding:20px 0}
+@media(max-width:650px){
+.sidebar{position:fixed;top:auto;bottom:95px;width:100%;height:60px;padding:5px 10px;z-index:5}
+.logo,.sidebar h4,.upload{display:none}
+.nav{display:flex;justify-content:space-around}
+.nav button{width:auto;font-size:12px;padding:15px 5px}
+.main{margin:0;width:100%;padding:17px 12px 80px}
+.hero{padding:25px 18px}
+.hero h1{font-size:29px}
+.top{margin-bottom:20px}
+.profile{font-size:12px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.player{height:95px;padding:9px;gap:8px}
+.now{width:34%}
+.now .cover{width:40px}
+.now p{font-size:11px}
+.controls{min-width:0}
+.buttons{gap:15px}
+.volume{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<aside class="sidebar">
+<div class="logo">♫ SOUNDIFY</div>
+<div class="nav">
+<button class="active" onclick="home()">⌂ Home</button>
+<button onclick="showAll()">⌕ Search</button>
+<button onclick="favorites()">♥ Favorite</button>
+<button onclick="playlist()">▤ Library</button>
+</div>
+<h4>Playlist Kamu</h4>
+<p style="color:#aaa;font-size:13px">Musik favoritmu ada di sini.</p>
+<label class="upload" for="upload">＋ Upload Lagu</label>
+<input type="file" id="upload" accept="audio/*" multiple>
+</aside>
+
+<main class="main">
+<div class="top">
+<input class="search" id="search" placeholder="Cari lagu atau penyanyi..." oninput="searchMusic()">
+<div class="profile">👤 User</div>
+</div>
+<div id="content"></div>
+</main>
+</div>
+
+<div class="player">
+<div class="now">
+<div class="cover" id="nowCover">♫</div>
+<div style="min-width:0">
+<p id="nowTitle">Belum ada lagu</p>
+<small id="nowArtist">Pilih musik</small>
+</div>
+<button class="heart" onclick="likeCurrent()">♡</button>
+</div>
+<div class="controls">
+<div class="buttons">
+<button onclick="previous()">⏮</button>
+<button class="play" id="playBtn" onclick="togglePlay()">▶</button>
+<button onclick="next()">⏭</button>
+</div>
+<div class="progress">
+<span id="currentTime">0:00</span>
+<input type="range" id="seek" min="0" max="100" value="0">
+<span id="duration">0:00</span>
+</div>
+</div>
+<div class="volume">🔊
+<input type="range" id="vol" min="0" max="1" step=".01" value=".8">
+</div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+const audio=document.getElementById("audio");
+let songs=[
+{id:1,title:"Lagu Instrumental",artist:"Soundify Demo",country:"Indonesia",emoji:"🎹",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+{id:2,title:"Pop Instrumental",artist:"Soundify Demo",country:"Barat",emoji:"🎧",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+{id:3,title:"Relaxing Music",artist:"Soundify Demo",country:"Indonesia",emoji:"🌙",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+{id:4,title:"Electronic Music",artist:"Soundify Demo",country:"Barat",emoji:"🎵",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"}
+];
+
+let current=-1;
+let liked=JSON.parse(localStorage.getItem("soundifyLiked")||"[]");
+let custom=[];
+
+function allSongs(){return [...songs,...custom]}
+function time(n){if(!isFinite(n))return "0:00";return Math.floor(n/60)+":"+String(Math.floor(n%60)).padStart(2,"0")}
+
+function playSong(id){
+let list=allSongs();
+current=list.findIndex(s=>s.id===id);
+if(current<0)return;
+let s=list[current];
+audio.src=s.url;
+document.getElementById("nowTitle").textContent=s.title;
+document.getElementById("nowArtist").textContent=s.artist;
+document.getElementById("nowCover").textContent=s.emoji;
+audio.play().then(()=>document.getElementById("playBtn").textContent="Ⅱ").catch(()=>alert("Audio tidak bisa diputar. Periksa koneksi internet atau file musik."));
+}
+
+function togglePlay(){
+if(!audio.src){if(allSongs().length)playSong(allSongs()[0].id);return}
+if(audio.paused){audio.play();document.getElementById("playBtn").textContent="Ⅱ"}
+else{audio.pause();document.getElementById("playBtn").textContent="▶"}
+}
+
+function next(){
+let list=allSongs();
+if(!list.length)return;
+playSong(list[(current+1+list.length)%list.length].id);
+}
+function previous(){
+let list=allSongs();
+if(!list.length)return;
+if(audio.currentTime>3){audio.currentTime=0;return}
+playSong(list[(current-1+list.length)%list.length].id);
+}
+audio.onended=next;
+audio.ontimeupdate=()=>{
+document.getElementById("currentTime").textContent=time(audio.currentTime);
+document.getElementById("duration").textContent=time(audio.duration);
+document.getElementById("seek").value=audio.duration?audio.currentTime/audio.duration*100:0;
+};
+document.getElementById("seek").oninput=e=>{
+if(audio.duration)audio.currentTime=e.target.value/100*audio.duration;
+};
+document.getElementById("vol").oninput=e=>audio.volume=e.target.value;
+audio.volume=.8;
+
+function card(s){
+return `<div class="card">
+<div class="cover" onclick="playSong(${s.id})">${s.emoji}</div>
+<button class="play-card" onclick="playSong(${s.id})">▶</button>
+<h3>${safe(s.title)}</h3><p>${safe(s.artist)}</p>
+</div>`;
+}
+function songRow(s){
+return `<div class="row" onclick="playSong(${s.id})">
+<div class="cover">${s.emoji}</div>
+<div class="info"><b>${safe(s.title)}</b><p>${safe(s.artist)} · ${s.country}</p></div>
+<button class="heart" onclick="event.stopPropagation();like(${s.id})">${liked.includes(s.id)?"♥":"♡"}</button>
+</div>`;
+}
+function safe(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function home(){
+document.getElementById("search").value="";
+let list=allSongs();
+document.getElementById("content").innerHTML=`
+<div class="hero"><p>SOUNDIFY PREMIUM</p><h1>Music for your mood.</h1><p>Temukan musik favoritmu di satu tempat.</p></div>
+<h2>🇮🇩 Musik Indonesia</h2><div class="grid">${list.filter(s=>s.country==="Indonesia").map(card).join("")||'<p class="empty">Belum ada lagu.</p>'}</div>
+<h2>🌎 Musik Barat</h2><div class="grid">${list.filter(s=>s.country==="Barat").map(card).join("")||'<p class="empty">Belum ada lagu.</p>'}</div>
+<h2>Semua Lagu</h2><div>${list.map(songRow).join("")}</div>`;
+}
+function showAll(){
+document.getElementById("search").value="";
+document.getElementById("content").innerHTML="<h2>Semua Musik</h2>"+allSongs().map(songRow).join("");
+}
+function favorites(){
+let list=allSongs().filter(s=>liked.includes(s.id));
+document.getElementById("content").innerHTML="<h2>♥ Lagu Favorit</h2>"+(list.map(songRow).join("")||'<p class="empty">Belum ada lagu favorit.</p>');
+}
+function playlist(){
+document.getElementById("content").innerHTML="<h2>▤ Playlist Saya</h2><p class='empty'>Semua musik yang tersedia di SOUNDIFY.</p>"+allSongs().map(songRow).join("");
+}
+function like(id){
+liked=liked.includes(id)?liked.filter(x=>x!==id):[...liked,id];
+localStorage.setItem("soundifyLiked",JSON.stringify(liked));
+home();
+}
+function likeCurrent(){
+let s=allSongs()[current];
+if(s)like(s.id);
+}
+function searchMusic(){
+let q=document.getElementById("search").value.toLowerCase();
+let list=allSongs().filter(s=>(s.title+" "+s.artist+" "+s.country).toLowerCase().includes(q));
+document.getElementById("content").innerHTML="<h2>Hasil Pencarian</h2>"+(list.map(songRow).join("")||'<p class="empty">Lagu tidak ditemukan.</p>');
+}
+
+document.getElementById("upload").onchange=e=>{
+[...e.target.files].forEach((f,i)=>{
+custom.push({id:Date.now()+i,title:f.name.replace(/\.[^/.]+$/,""),artist:"Musik dari perangkat",country:"Indonesia",emoji:"🎵",url:URL.createObjectURL(f)});
+});
+home();
+e.target.value="";
+};
+
+home();
+</script>
+</body>
+</html>
